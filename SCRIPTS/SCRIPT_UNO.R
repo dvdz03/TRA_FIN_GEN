@@ -47,3 +47,4 @@ query1<-GDCquery(project = "TCGA-BRCA",
                  experimental.strategy = "RNA-Seq")
 GDCdownload(query1, files.per.chunk = 50)
 datos1<-GDCprepare(query1)
+
