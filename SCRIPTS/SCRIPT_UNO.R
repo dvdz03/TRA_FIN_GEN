@@ -53,3 +53,23 @@ counts<-assay(datos1)
 counts_filt<- counts[rowSums(counts)>10, ]
 dge<- DGEList(counts_filt)
 dge<- calcNormFactors(dge)
+
+###
+metadatos<- colData(datos1)
+subtipos<- metadatos$paper_BRCA_Subtype_PAM50
+genes_top<- counts_filt[order(apply(counts_filt, 1, var), decreasing= TRUE)[1:20], ]#tiene NA
+
+#
+head(subtipos)#hay una NA ahí
+table(subtipos, useNA = "always")
+muestras_buenas <- !is.na(subtipos)
+genes_top_limpios <- genes_top [ ,muestras_buenas]
+subtipos_limpios <- subtipos [muestras_buenas]
+subtipos_factor <- as.factor (subtipos_limpios)
+
+## VOLCANO PLOT
+grupos <- ifelse (metadatos$sample_type == "Primary Tumor", "Tumor", "Normal")
+dis <- model.matrix(~0 + grupos)
+colnames(dis) <- c("Normal", "Tumor")
+fit <- lmFit (counts_filt, dis)
+contraste <- makeConstrasts(Tumor_vs_Normal = Tumor-Normal, levels = dis)#es de limma, falta instalar
