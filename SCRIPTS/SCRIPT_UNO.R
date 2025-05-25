@@ -72,4 +72,18 @@ grupos <- ifelse (metadatos$sample_type == "Primary Tumor", "Tumor", "Normal")
 dis <- model.matrix(~0 + grupos)
 colnames(dis) <- c("Normal", "Tumor")
 fit <- lmFit (counts_filt, dis)
-contraste <- makeConstrasts(Tumor_vs_Normal = Tumor-Normal, levels = dis)#es de limma, falta instalar
+contraste <- makeContrasts(Tumor_vs_Normal = Tumor-Normal, levels = dis)
+fit2 <- contrasts.fit(fit, contraste)
+fit2 <- eBayes(fit2)
+resultados <- topTable(fit2, number = Inf, coef = "Tumor_vs_Normal")
+str(resultados)#esto es solo para ver si si tiene lo que se necesita para hacer el volcano, logFC...
+
+ggplot(resultados, aes(x = logFC, y = -log10(adj.P.Val)))+
+  geom_point(aes(color = ifelse(abs(logFC)>1 & adj.P.Val < 0.05, "Significativo", "No Significativo")), size = 2)+
+  scale_color_manual( values = c("Significativo"="red", "No Significativo"="gray"),
+                      name = "Significancia")+
+  labs(title = "Volcano Plot BRCA", 
+       x = "log2 FC",
+       y = "-log10 p")+
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black")+
+  geom_vline(xintercept = c(-1,1), linetype = "dashed", color = "black")
