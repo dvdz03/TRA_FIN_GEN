@@ -17,13 +17,13 @@ genes_ya <- bitr(genes_buenos,
 head(genes_ya)
 cosago <- enrichGO( gene = genes_ya$ENTREZID,
                     OrgDb = org.Hs.eg.db,
-                    ont = "BP",
+                    ont = "MF",
                     pAdjustMethod = "BH",
                     pvalueCutoff = 0.05,
                     readable = TRUE)
 head(cosago)
 barplot(cosago,
         showCategory = 15, 
-        title= "ontología (PROCESO BIOLÓGICO)",
+        title= "ontología (FUNCIÓN MOLECULAR)",
         font.size = 8)
 
