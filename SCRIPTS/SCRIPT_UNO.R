@@ -91,3 +91,4 @@ ggplot(resultados, aes(x = logFC, y = -log10(adj.P.Val)))+
 
 
 2+2
+2+3
