@@ -17,6 +17,9 @@ library(TCGAbiolinks)
 library(SummarizedExperiment)
 library(survival)
 library(enrichplot)
+library(clusterProfiler)
+library(ggplot2)
+library
 #las otras fueron cargadas desde PACKAGES
 
 #CARGA DE LOS DATOS TCGA
@@ -27,3 +30,4 @@ query1<-GDCquery(project = "TCGA-BRCA",
                  sample.type = c("Primary Tumor", "Solid Tissue Normal"),
                  experimental.strategy = "RNA-Seq")
 GDCdownload(query1, files.per.chunk = 50)
+datos1<-GDCprepare(query1)
