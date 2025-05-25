@@ -18,3 +18,11 @@ library(SummarizedExperiment)
 library(survival)
 library(enrichplot)
 #las otras fueron cargadas desde PACKAGES
+
+#CARGA DE LOS DATOS TCGA
+query1<-GDCquery(project = "TCGA-BRCA",
+                 data.category= "Transcriptome Profiling",
+                 data.type= "Gene Expression Quantification",
+                 workflow.type = "STAR - Counts",
+                 sample.type = c("Primary Tumor", "Solid Tissue Normal"),
+                 experimental.strategy = "RNA-Seq")
