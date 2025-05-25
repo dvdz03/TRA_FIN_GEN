@@ -26,3 +26,4 @@ query1<-GDCquery(project = "TCGA-BRCA",
                  workflow.type = "STAR - Counts",
                  sample.type = c("Primary Tumor", "Solid Tissue Normal"),
                  experimental.strategy = "RNA-Seq")
+GDCdownload(query1, files.per.chunk = 50)
