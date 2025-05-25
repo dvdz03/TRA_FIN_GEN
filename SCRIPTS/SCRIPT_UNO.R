@@ -87,3 +87,7 @@ ggplot(resultados, aes(x = logFC, y = -log10(adj.P.Val)))+
        y = "-log10 p")+
   geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black")+
   geom_vline(xintercept = c(-1,1), linetype = "dashed", color = "black")
+
+
+
+2+2
