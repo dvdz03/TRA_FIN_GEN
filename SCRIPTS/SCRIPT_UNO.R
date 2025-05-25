@@ -48,3 +48,8 @@ query1<-GDCquery(project = "TCGA-BRCA",
 GDCdownload(query1, files.per.chunk = 50)
 datos1<-GDCprepare(query1)
 
+####
+counts<-assay(datos1)
+counts_filt<- counts[rowSums(counts)>10, ]
+dge<- DGEList(counts_filt)
+dge<- calcNormFactors(dge)
