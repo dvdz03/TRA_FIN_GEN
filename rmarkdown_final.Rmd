@@ -63,6 +63,10 @@ destacan algunas de las más importantes:
     incluye en el entorno de trabajo por su utilidad al visualizar
     relaciones entre genes.
 
+-   **`STRINGdb`:** Paquete para obtener y visualizar redes de
+    interacción proteína-proteína, útil para entender relaciones
+    funcionales entre genes.
+
 ## Carga y origen de los datos
 
 Para este proyecto se trabajó con datos transcriptómicos del estudio
