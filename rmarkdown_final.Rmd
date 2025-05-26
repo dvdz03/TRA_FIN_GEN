@@ -1,0 +1,203 @@
+---
+title: "Análisis de expresión génica en cáncer de mama (BRCA)"
+author: "David Flores, Esrella Segobia, Daniela Villanueva"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introducción
+
+El cáncer de mama (BRCA) es una de las principales causas de muerte por
+cáncer en mujeres a nivel mundial. Comprender los perfiles de expresión
+génica asociados a sus distintos subtipos moleculares permite avanzar
+hacia una medicina personalizada, mejorando el diagnóstico, pronóstico y
+tratamiento. En este análisis utilizamos datos del consorcio TCGA para
+explorar la expresión génica diferencial entre tejido tumoral y normal,
+identificar genes clave y relacionarlos con los subtipos PAM50 del
+cáncer de mama.
+
+En este análisis usamos un conjunto de librerías de R que nos permiten
+manejar datos genómicos, realizar análisis estadísticos, visualizar
+resultados y generar interpretaciones biológicas. A continuación, se
+destacan algunas de las más importantes:
+
+#### Algunas de las librerías utilizadas fueron:
+
+-   **`TCGAbiolinks`**: Permite acceder a los datos del consorcio TCGA
+    directamente desde R. Usamos esta librería para descargar y preparar
+    los datos de expresión génica del cáncer de mama.
+
+-   **`ggplot2`**: Librería esencial para crear gráficos de alta
+    calidad. En este proyecto la usamos para construir el *volcano plot*
+    que resume los genes más importantes.
+
+-   **`pheatmap`**: Utilizada para generar mapas de calor que muestran
+    patrones de expresión génica y su relación con los subtipos
+    moleculares.
+
+-   **`clusterProfiler`** y **`org.Hs.eg.db`**: Utilizadas para análisis
+    de enriquecimiento funcional y anotación biológica, asociando genes
+    con rutas metabólicas, procesos biológicos y funciones moleculares.
+
+-   **`edgeR`**: Paquete especializado en el análisis de expresión
+    diferencial a partir de datos de RNA-Seq. En este proyecto lo usamos
+    para normalizar la matriz de expresión génica y preparar los datos
+    para identificar genes relevantes.
+
+-   **`limma`**: Herramienta potente para análisis estadístico de datos
+    de expresión. En este caso, fue clave para aplicar modelos lineales
+    y generar los resultados usados en el volcano plot.
+
+-   **`DESeq2`**: Usada para el análisis de expresión diferencial en
+    RNA-Seq. Aunque no se usó directamente en el volcano plot, es una
+    alternativa por la carga de capacidad de manejo robusto de datos.
+
+-   **`igraph`**: Utilizada para crear y analizar redes biológicas. Se
+    incluye en el entorno de trabajo por su utilidad al visualizar
+    relaciones entre genes.
+
+## Carga y origen de los datos
+
+Para este proyecto se trabajó con datos transcriptómicos del estudio
+**TCGA-BRCA (The Cancer Genome Atlas - Breast Invasive Carcinoma)**, uno
+de los recursos más completos y accesibles para estudios moleculares de
+cáncer de mama. La obtención de los datos se realizó mediante el paquete
+`TCGAbiolinks`, que permite acceder al repositorio **Genomic Data
+Commons (GDC)**. Se descargaron específicamente datos de **RNA-Seq**,
+procesados con el pipeline **STAR - Counts**, correspondientes a
+muestras de **tumor primario** y **tejido normal sólido**.
+
+A continuación, se muestra el script que fue utilizado para consultar,
+descargar y preparar los datos, aunque este paso no se ejecuta en este
+documento por el peso de los archivos:
+
+```{r, eval=FALSE}
+# Consulta a la base de datos TCGA
+query1 <- GDCquery(project = "TCGA-BRCA",
+                   data.category = "Transcriptome Profiling",
+                   data.type = "Gene Expression Quantification",
+                   workflow.type = "STAR - Counts",
+                   sample.type = c("Primary Tumor", "Solid Tissue Normal"),
+                   experimental.strategy = "RNA-Seq")
+
+# Descarga y organización de los datos (omitido en este documento)
+# GDCdownload(query1, files.per.chunk = 50)
+# datos1 <- GDCprepare(query1)
+
+# Extracción posterior (ya realizada fuera de este documento)
+# counts <- assay(datos1)
+```
+
+## Generación del Volcano Plot
+
+Para identificar genes diferencialmente expresados entre tumores
+primarios y tejido normal, aplicamos un análisis estadístico usando el
+paquete **limma**. Primero, creamos un modelo lineal que compara ambos
+grupos y luego extraemos los resultados para construir el volcano plot.
+
+```{r, eval=FALSE}
+# Definir grupos Tumor vs Normal
+grupos <- ifelse(metadatos$sample_type == "Primary Tumor", "Tumor", "Normal")
+dis <- model.matrix(~0 + grupos)
+colnames(dis) <- c("Normal", "Tumor")
+
+# Ajuste del modelo lineal y contraste
+fit <- lmFit(counts_filt, dis)
+contraste <- makeContrasts(Tumor_vs_Normal = Tumor - Normal, levels = dis)
+fit2 <- contrasts.fit(fit, contraste)
+fit2 <- eBayes(fit2)
+
+# Obtener tabla con resultados
+resultados <- topTable(fit2, number = Inf, coef = "Tumor_vs_Normal")
+
+# Gráfico Volcano Plot
+ggplot(resultados, aes(x = logFC, y = -log10(adj.P.Val))) +
+  geom_point(aes(color = ifelse(abs(logFC) > 1 & adj.P.Val < 0.05, "Significativo", "No Significativo")), size = 2) +
+  scale_color_manual(values = c("Significativo" = "red", "No Significativo" = "blue"), name = "Significancia") +
+  labs(title = "Volcano Plot BRCA", x = "log2 Fold Change", y = "-log10 p-valor ajustado") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black") +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "black")
+```
+
+Los 20 genes mas importantes los adjuntamos a una tabla, asi como su
+conversion del identificador a su "nombre comun"
+
+```{r, echo=FALSE}
+library(biomaRt)
+
+ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+
+# Lista original con versión
+ensg_ids <- c("ENSG00000153002.12", "ENSG00000210082.2", "ENSG00000276168.1", "ENSG00000211896.7",
+              "ENSG00000108821.14", "ENSG00000198804.2", "ENSG00000198886.2", "ENSG00000115414.21",
+              "ENSG00000164692.18", "ENSG00000168542.16", "ENSG00000211592.8", "ENSG00000110484.7",
+              "ENSG00000198938.2", "ENSG00000198712.1", "ENSG00000198727.2", "ENSG00000115461.5",
+              "ENSG00000135222.6", "ENSG00000012223.13", "ENSG00000198763.3", "ENSG00000100604.13")
+
+# Quitar versión
+ensg_ids_no_version <- sub("\\..*", "", ensg_ids)
+
+# Obtener nombres de genes
+gene_names <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol'),
+                    filters = 'ensembl_gene_id',
+                    values = ensg_ids_no_version,
+                    mart = ensembl)
+
+print(gene_names)
+```
+
+![](resultados/volcano_plot_BRCA.png)
+
+Entre los genes más significativos, destaca **FN1** (ENSG00000115414)
+que codifica una glicoproteína de la matriz extracelular que facilita la
+adhesión celular y la migración. En tumores de mama, la sobreexpresión
+de FN1 se ha asociado con mayor capacidad invasiva y metástasis, y
+**COL1A1** (ENSG00000108821), es un componente estructural clave de la
+matriz extracelular, que puede promover la remodelación de la matriz y
+facilitando la progresión tumoral.
+
+Estos genes ejemplifican cómo la regulación diferencial de la matriz
+extracelular puede ser un factor clave en la agresividad tumoral,
+indicando mecanismos biológicos esenciales en el desarrollo del cáncer
+de mama y potencialmente funcionando como biomarcadores o blancos
+terapéuticos.
+
+## Generación de heatmap
+
+El cáncer de mama es una enfermedad heterogénea que se clasifica en
+diferentes subtipos moleculares basados en el perfil de expresión
+génica. Estos subtipos incluyen a: Luminal A, Luminal B,
+HER2-enriquecido y Basal-like, cada uno presenta características
+biológicas y clínicas distintivas que afectan el pronóstico y la
+respuesta al tratamiento.
+
+En este análisis, las muestras fueron clasificadas por subtipos
+moleculares y posteriormente cuantificadas. Se generó una tabla de
+conteo que muestra el número de muestras por subtipo, lo cual es
+esencial para interpretar adecuadamente las diferencias de expresión
+observadas en el heatmap.
+
+```{r echo=FALSE}
+read.csv("resultados/conteo_subtipos.csv")
+```
+
+![](resultados/heatmap_subtipos.png)
+
+El heatmap representa los niveles de expresión de los 20 genes con mayor
+varianza entre las muestras de cáncer de mama, agrupadas por subtipo
+molecular. Aunque visualmente predomina una coloración azul, por el
+tamaño de las muestras, *esto indica niveles de expresion similares en
+muchas muestras*, por lo que no se pueden identificar patrones
+relevantes. Lo que refleja la heterogeneidad del cáncer de mama a nivel
+transcriptómico, aunque también señala que no todos los genes altamente
+variables a nivel estadístico necesariamente muestran una clara
+separación visual entre grupos, lo que destaca la importancia de
+complementar con otros enfoques como **análisis de enriquecimiento** o
+clustering específico por subtipo.
