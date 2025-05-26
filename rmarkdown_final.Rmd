@@ -205,3 +205,28 @@ variables a nivel estadístico necesariamente muestran una clara
 separación visual entre grupos, lo que destaca la importancia de
 complementar con otros enfoques como **análisis de enriquecimiento** o
 clustering específico por subtipo.
+
+
+## Interpretación de la red de interacción miRNA - genes
+
+![](resultados/red_miRNA_genes.png)
+
+La red presentada representa interacciones entre miRNAs (en azul claro) y genes diana (en rojo los más importantes). Los nodos conectados indican regulación post-transcripcional, donde los miRNAs inhiben o modulan la expresión de genes asociados a distintos subtipos moleculares del cáncer de mama.
+
+Los genes resaltados en **rojo** corresponden a los **más relevantes** según su grado de conectividad dentro de la red, es decir, la cantidad de miRNAs que los regulan. Además, coinciden con los **20 genes más importantes** identificados en nuestro análisis diferencial de expresión génica.
+
+#### Posible relevancia biológica de los genes destacados:
+
+| Gen       | Función general                                 | Relevancia en cáncer de mama |
+|-----------|--------------------------------------------------|-------------------------------|
+| **FN1**   | Matriz extracelular, adhesión y migración celular | Asociado a invasión y metástasis |
+| **COL1A1**, **COL3A1** | Estructura de colágeno en tejidos           | Cambios en matriz extracelular favorecen progresión tumoral |
+| **SCGB2A2** | Proteína secretora mamaria                     | Marcador del subtipo **luminal A** |
+| **MT-CYB**, **MT-ND2** | Genes mitocondriales, metabolismo energético | Implicados en el metabolismo tumoral y estrés oxidativo |
+| **CPB1**   | Enzima pancreática, poco frecuente en mama       | Puede estar expresado en células diferenciadas tumorales |
+| **IGHG1**, **IGKC** | Inmunoglobulinas                         | Reflejan posible infiltrado inmune en tumores |
+| **LTF**    | Lactotransferrina, respuesta inmune              | Posible rol como supresor tumoral |
+
+Estos genes podrían tener un **papel central** en los mecanismos que diferencian los subtipos moleculares del cáncer de mama. Su regulación por múltiples miRNAs sugiere que son **blancos críticos de control post-transcripcional** y potenciales biomarcadores para diagnóstico o tratamiento personalizado.
+
+
