@@ -160,6 +160,10 @@ print(gene_names)
 ```
 
 ![](resultados/volcano_plot_BRCA.png)
+```{r}
+print(resultados)
+```
+
 
 Entre los genes más significativos, destaca **FN1** (ENSG00000115414)
 que codifica una glicoproteína de la matriz extracelular que facilita la
