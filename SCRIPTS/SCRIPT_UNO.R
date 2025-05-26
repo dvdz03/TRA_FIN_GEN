@@ -49,14 +49,14 @@ GDCdownload(query1, files.per.chunk = 50)
 datos1<-GDCprepare(query1)
 
 ####
-counts<-assay(datos1)
-counts_filt<- counts[rowSums(counts)>10, ]
+counts<-assay(datos1) #extrae la matriz de cuentas (genes x muestras)
+counts_filt<- counts[rowSums(counts)>10, ] # Filtrar los genes con baja expresión
 dge<- DGEList(counts_filt)
 dge<- calcNormFactors(dge)
 
 ###
-metadatos<- colData(datos1)
-subtipos<- metadatos$paper_BRCA_Subtype_PAM50
+metadatos<- colData(datos1) #METADATOS
+subtipos<- metadatos$paper_BRCA_Subtype_PAM50 #Extrae los subtipos moleculares de BRCA
 genes_top<- counts_filt[order(apply(counts_filt, 1, var), decreasing= TRUE)[1:20], ]#tiene NA
 
 #
@@ -78,17 +78,21 @@ fit2 <- eBayes(fit2)
 resultados <- topTable(fit2, number = Inf, coef = "Tumor_vs_Normal")
 str(resultados)#esto es solo para ver si si tiene lo que se necesita para hacer el volcano, logFC...
 
-ggplot(resultados, aes(x = logFC, y = -log10(adj.P.Val)))+
-  geom_point(aes(color = ifelse(abs(logFC)>1 & adj.P.Val < 0.05, "Significativo", "No Significativo")), size = 2)+
-  scale_color_manual( values = c("Significativo"="red", "No Significativo"="gray"),
-                      name = "Significancia")+
-  labs(title = "Volcano Plot BRCA", 
-       x = "log2 FC",
-       y = "-log10 p")+
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black")+
-  geom_vline(xintercept = c(-1,1), linetype = "dashed", color = "black")
+png("resultados/volcano_plot_BRCA.png", width = 1000, height = 800, res = 150)
+
+ggplot(resultados, aes(x = logFC, y = -log10(adj.P.Val))) +
+  geom_point(aes(color = ifelse(abs(logFC) > 1 & adj.P.Val < 0.05, "Significativo", "No Significativo")), size = 2) +
+  scale_color_manual(values = c("Significativo" = "red", "No Significativo" = "blue"), name = "Significancia") +
+  labs(title = "Volcano Plot BRCA", x = "log2 FC", y = "-log10 p") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black") +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "black")
+
+dev.off()
 
 
 
-2+2
-2+3
+
+
+
+
+
