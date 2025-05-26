@@ -37,7 +37,7 @@ molecular <- enrichGO( gene = genes_ya$ENTREZID,
 mole <- barplot(molecular,
                 showCategory = 20,
                 title = "ontología (Función Molecular)",
-                font.size = 5)
+                font.size = 7)
 mole
 
 elotro <- enrichGO(gene = genes_ya$ENTREZID,
@@ -48,8 +48,8 @@ elotro <- enrichGO(gene = genes_ya$ENTREZID,
                    readable = TRUE)
 otro <- barplot(elotro, 
                 showCategory = 20,
-                title = "ontología (COMPARTIMENTO CELULAR)",
-                font.size = 5)
+                title = "ontología (COMPONENTE CELULAR)",
+                font.size = 7)
 
 otro
 
