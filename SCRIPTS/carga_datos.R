@@ -1,2 +1,3 @@
-datos<-read.csv("~/TRA_FIN_GEN/DATOS/sra_result.csv")
+datos<-read.csv("DATOS/sra_result.csv")
 datos
+
