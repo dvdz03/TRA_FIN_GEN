@@ -287,13 +287,6 @@ Se identificaron **tres módulos principales** de interacción:
 3. **Módulo inmune-secretor**: Interacción entre **LTF y CSN2**.  
    - Aunque es una conexión limitada, podría representar una relación entre **respuestas inmunes locales** y funciones secretoras alteradas en subtipos de cáncer de mama, especialmente en tumores con diferenciación celular.
 
-#### Conclusión:
-
-La red STRING confirma que varios de los genes seleccionados no sólo son relevantes a nivel transcriptómico, sino que también participan en **rutas funcionales interconectadas**. Estas interacciones sugieren procesos clave como:
--   Alteraciones metabólicas mitocondriales.
--   Remodelación de la matriz extracelular.
--   Modulación inmune y secretora.
-
 
 ## Conclusión 
 

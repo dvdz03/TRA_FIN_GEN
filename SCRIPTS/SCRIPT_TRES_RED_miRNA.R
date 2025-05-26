@@ -40,3 +40,6 @@ plot(g,
      main = "Red de interacciones miRNA - genes")
 
 dev.off()
+
+cytoscapePing()
+createNetworkFromIgraph(g,title="miRNA",collection="test")
