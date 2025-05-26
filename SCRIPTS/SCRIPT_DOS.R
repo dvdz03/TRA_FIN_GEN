@@ -5,6 +5,20 @@
 install.packages("pheatmap")
 library(pheatmap)
 
+#normalizacíon de los datos
+matriz_normal <- log2(genes_top_limpios+1)
+matriz_escalada <- t(scale(t(matriz_normal)))
+paraheat1 <- data.frame(Subtype = subtipos_factor)
+rownames(paraheat1)<- colnames (genes_top_limpios)
+pheatmap(mat = matriz_escalada,
+         annotation_col = paraheat1,
+         show_colnames = FALSE,
+         show_rownames = TRUE,
+         color = colorRampPalette(c("blue","white","red"))(100),
+         clustering_method = "complete",
+         fontsize_row = 8,
+         main = "expresíon 20 genes más variables por subtipo")
+
 
 paraheat <- data.frame(Subtype = subtipos_factor)
 rownames(paraheat) <- colnames(genes_top_limpios)
