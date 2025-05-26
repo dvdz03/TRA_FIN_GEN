@@ -14,7 +14,7 @@ genes_ya <- bitr(genes_buenos,
                  fromType = "ENSEMBL",
                  toType = "ENTREZID",
                  OrgDb = "org.Hs.eg.db")
-head(genes_ya)
+head(genes_ya, 20)
 cosago <- enrichGO( gene = genes_ya$ENTREZID,
                     OrgDb = org.Hs.eg.db,
                     ont = "BP",
