@@ -99,6 +99,8 @@ query1 <- GDCquery(project = "TCGA-BRCA",
 # counts <- assay(datos1)
 ```
 
+
+
 ## Generación del Volcano Plot
 
 Para identificar genes diferencialmente expresados entre tumores
@@ -173,6 +175,8 @@ indicando mecanismos biológicos esenciales en el desarrollo del cáncer
 de mama y potencialmente funcionando como biomarcadores o blancos
 terapéuticos.
 
+
+
 ## Generación de heatmap
 
 El cáncer de mama es una enfermedad heterogénea que se clasifica en
@@ -207,6 +211,37 @@ complementar con otros enfoques como **análisis de enriquecimiento** o
 clustering específico por subtipo.
 
 
+## Análisis de Ontología Génica (GO)
+
+Se realizó un análisis de enriquecimiento funcional (Gene Ontology, GO) para explorar las funciones biológicas más representativas asociadas a los genes diferencialmente expresados en cáncer de mama. El análisis se dividió en tres categorías principales: **Función Molecular (MF)**, **Componente Celular (CC)** y **Proceso Biológico (BP)**.
+
+#### Componente Celular 
+
+Este GO se hizo con el objetivo de identificar en qué estructuras celulares están principalmente localizadas las proteínas codificadas por los genes diferencialmente expresados.
+
+![](resultados/GO-CompCel.png)
+
+El enriquecimiento en componentes como sinapsis, estructuras del citoesqueleto, y zonas de adhesión refuerza la hipótesis de que los genes estudiados están involucrados en **procesos fundamentales para la progresión tumoral**, como la señalización, migración, adhesión celular y proliferación. Esta información puede ser útil para **identificar posibles blancos terapéuticos** y mejorar la caracterización molecular del cáncer de mama.
+
+
+#### Función Molecular
+
+Se realizó un análisis de enriquecimiento GO para la categoría de función molecular, con el objetivo de identificar los procesos funcionales más afectados en genes relacionados con cáncer de mama. El gráfico muestra las funciones más representadas, destacando actividades regulatorias de nucleótidos, proteínas GTPasa, y factores de transcripción.
+
+![](resultados/GO-FunMol.png)
+
+
+Funciones como *"nucleoside-triphosphatase regulator activity"* y *"GTPase regulator activity"* presentan un alto número de genes y una significancia estadística elevada (p.adjust ~ 0.01), lo que sugiere su papel clave en la señalización celular alterada en el cáncer. También se observan funciones vinculadas a la actividad quinasa y regulación transcripcional, procesos esenciales para el control del ciclo celular y proliferación tumoral.
+
+
+#### Procesos biológicos
+
+![](resultados/GO-ProBio.png)
+
+El análisis de enriquecimiento GO en la categoría de *proceso biológico* revela que muchos genes asociados al cáncer de mama están involucrados en rutas relacionadas con el desarrollo embrionario y la organización celular. Entre los procesos más significativos se encuentran *"cilium organization"*, *"forebrain development"* y *"in utero embryonic development"*, lo cual sugiere una reactivación de programas de desarrollo durante la progresión del tumor. 
+
+Esto concuerda con la evidencia de que muchos tipos de cáncer, incluido el cáncer de mama, reutilizan rutas moleculares embrionarias para promover la proliferación, migración y evasión del control celular. Además, la activación de procesos como la organización de cilios puede relacionarse con la señalización celular aberrante y la pérdida de polaridad celular, eventos frecuentemente observados en células tumorales. En conjunto, estos resultados refuerzan la idea de que la progresión del cáncer de mama implica no solo mutaciones genéticas, sino también una reprogramación profunda de los circuitos celulares normales.
+
 ## Interpretación de la red de interacción miRNA - genes
 
 ![](resultados/red_miRNA_genes.png)
@@ -228,5 +263,38 @@ Los genes resaltados en **rojo** corresponden a los **más relevantes** según s
 | **LTF**    | Lactotransferrina, respuesta inmune              | Posible rol como supresor tumoral |
 
 Estos genes podrían tener un **papel central** en los mecanismos que diferencian los subtipos moleculares del cáncer de mama. Su regulación por múltiples miRNAs sugiere que son **blancos críticos de control post-transcripcional** y potenciales biomarcadores para diagnóstico o tratamiento personalizado.
+
+
+## Red de Interacciones Proteicas (STRING)
+
+La red de interacciones proteicas fue generada utilizando la base de datos STRING, empleando los genes más relevantes identificados en el análisis diferencial. Esta red nos permite visualizar posibles interacciones físicas o funcionales entre las proteínas codificadas por dichos genes, lo que puede reflejar su participación conjunta en procesos biológicos asociados al cáncer de mama.
+
+![](resultados/red_proteinas.png)
+
+
+#### Análisis de la red:
+
+Se identificaron **tres módulos principales** de interacción:
+
+1. **Módulo mitocondrial**: Incluye genes como **MT-CO1, MT-CO2, MT-CO3, MT-CYB, MT-ND2, MT-ND4, MT-ND5**.  
+   - Estas proteínas mitocondriales participan en la **cadena de transporte de electrones** y en la producción de energía (ATP).
+   - Su agrupación sugiere una **alteración en el metabolismo mitocondrial**, común en células tumorales con alta tasa proliferativa.
+
+2. **Módulo de matriz extracelular**: Formado por **COL1A1, COL1A2, COL3A1, FN1, IGFBP5**.  
+   - Estas proteínas están implicadas en la **estructura del tejido conectivo y la señalización celular**.
+   - Su interacción sugiere un posible papel en **invasión tumoral y remodelado del microambiente tumoral**, eventos claves en la progresión del cáncer de mama.
+
+3. **Módulo inmune-secretor**: Interacción entre **LTF y CSN2**.  
+   - Aunque es una conexión limitada, podría representar una relación entre **respuestas inmunes locales** y funciones secretoras alteradas en subtipos de cáncer de mama, especialmente en tumores con diferenciación celular.
+
+#### Conclusión:
+
+La red STRING confirma que varios de los genes seleccionados no sólo son relevantes a nivel transcriptómico, sino que también participan en **rutas funcionales interconectadas**. Estas interacciones sugieren procesos clave como:
+- Alteraciones metabólicas mitocondriales.
+- Remodelación de la matriz extracelular.
+- Modulación inmune y secretora.
+
+
+
 
 
